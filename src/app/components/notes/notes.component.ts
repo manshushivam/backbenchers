@@ -64,15 +64,27 @@ export class NotesComponent implements OnInit {
     if (!this.activeTopic || !this.roadmap) return;
     
     this.isGeneratingAI = true;
-    const promptContext = `${this.roadmap.topicPrompt} -> ${this.activeTopic.title}`;
     
-    this.roadmapService.fetchTopicNotes(this.activeTopic.id, promptContext, this.language)
-      .subscribe(content => {
+    this.roadmapService.fetchTopicNotes(
+      this.activeTopic.id,
+      this.roadmap.topicPrompt,
+      this.activeTopic.title,
+      this.language
+    ).subscribe({
+      next: (content) => {
         if (this.activeTopic) {
           this.activeTopic.aiNotesContent = content;
         }
         this.isGeneratingAI = false;
-      });
+      },
+      error: (err) => {
+        console.error('AI Notes Error:', err);
+        if (this.activeTopic) {
+          this.activeTopic.aiNotesContent = '**Error generating notes.** Please try again later.';
+        }
+        this.isGeneratingAI = false;
+      }
+    });
   }
 
   async markCompleted() {

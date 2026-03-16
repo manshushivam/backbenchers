@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, of, delay, switchMap } from 'rxjs';
 import {
-  collection, doc, setDoc, getDoc, getDocs, updateDoc, query, orderBy
+  collection, doc, setDoc, getDoc, getDocs, query, orderBy
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { AuthService } from './auth.service';
@@ -32,7 +32,7 @@ export interface CustomRoadmap {
   totalStreak: number;
   totalPoints: number;
   modules: DynamicModule[];
-  createdAt: string; // ISO string for Firestore
+  createdAt: string;
   userId: string;
 }
 
@@ -40,13 +40,13 @@ export interface CustomRoadmap {
   providedIn: 'root'
 })
 export class RoadmapService {
-  // Local cache for the current session
   private roadmapCache: Map<string, CustomRoadmap> = new Map();
 
   constructor(private authService: AuthService) {}
 
   /**
-   * Generates a mock roadmap and saves it to Firestore under the user's collection.
+   * Placeholder for generating a roadmap.
+   * This will be connected to your Node.js backend soon!
    */
   generateRoadmap(prompt: string): Observable<CustomRoadmap> {
     const userId = this.authService.userId;
@@ -55,10 +55,11 @@ export class RoadmapService {
     }
 
     const roadmapId = 'rm_' + Math.random().toString(36).substr(2, 9);
-
-    const newRoadmap: CustomRoadmap = {
+    
+    // TEMPORARY: Reverting to mock until Node.js backend is ready
+    return of({
       id: roadmapId,
-      title: `${prompt.substring(0, 15).toUpperCase()} Zero-to-Hero`,
+      title: `${prompt.toUpperCase()} Zero-to-Hero`,
       topicPrompt: prompt,
       status: 'In Progress',
       overallProgress: 0,
@@ -69,51 +70,34 @@ export class RoadmapService {
       modules: [
         {
           id: 'm1',
-          title: 'Module 1: The Absolute Basics',
+          title: 'Module 1: Getting Started',
           topics: [
-            { id: 't1_1', title: 'What actually is it?', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null },
-            { id: 't1_2', title: 'Why should you care?', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null },
-            { id: 't1_3', title: 'Setup & Installation', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null },
+            { id: 't1_1', title: `Intro to ${prompt}`, isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null },
+            { id: 't1_2', title: 'Core Concepts', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null }
           ]
         },
         {
           id: 'm2',
-          title: 'Module 2: Core Concepts (Mains)',
+          title: 'Module 2: Advanced Topics',
           topics: [
-            { id: 't2_1', title: 'The Architecture', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null },
-            { id: 't2_2', title: 'Key Algorithms & Logic', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null },
-            { id: 't2_3', title: 'Common Pitfalls', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null },
-          ]
-        },
-        {
-          id: 'm3',
-          title: 'Module 3: Advanced "Chad" Topics',
-          topics: [
-            { id: 't3_1', title: 'Performance Optimization', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null },
-            { id: 't3_2', title: 'Real-world Scaling', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null },
+            { id: 't2_1', title: 'Practical Application', isRead: false, timeSpentSeconds: 0, quizAttempted: false, quizScore: 0, fireLevel: null }
           ]
         }
       ]
-    };
-
-    // Save to Firestore and cache
-    return of(null).pipe(
-      delay(2500), // Simulate LLM generation time
-      switchMap(() => {
+    } as CustomRoadmap).pipe(
+      delay(2000), // Simulate LLM processing
+      switchMap(roadmap => {
         const docRef = doc(db, 'users', userId, 'roadmaps', roadmapId);
-        return from(setDoc(docRef, newRoadmap)).pipe(
+        return from(setDoc(docRef, roadmap)).pipe(
           switchMap(() => {
-            this.roadmapCache.set(roadmapId, newRoadmap);
-            return of(newRoadmap);
+            this.roadmapCache.set(roadmapId, roadmap);
+            return of(roadmap);
           })
         );
       })
     );
   }
 
-  /**
-   * Fetches a single roadmap — tries cache first, then Firestore
-   */
   async getRoadmap(id: string): Promise<CustomRoadmap | undefined> {
     if (this.roadmapCache.has(id)) {
       return this.roadmapCache.get(id);
@@ -136,9 +120,6 @@ export class RoadmapService {
     return undefined;
   }
 
-  /**
-   * Fetches all roadmaps for the current user from Firestore.
-   */
   async getAllRoadmaps(): Promise<CustomRoadmap[]> {
     const userId = this.authService.userId;
     if (!userId) return [];
@@ -161,21 +142,15 @@ export class RoadmapService {
   }
 
   /**
-   * Simulates AI note generation (will later call LLM API)
+   * Placeholder for fetching topic notes.
+   * This will be connected to your Node.js backend soon!
    */
-  fetchTopicNotes(topicId: string, promptInfo: string, language: 'English' | 'Hinglish'): Observable<string> {
-    let content = '';
-    if (language === 'Hinglish') {
-      content = `**Bhai sun:** Tu jo sikhna chahta hai (*${promptInfo}*), yeh topic uska fundamental base hai! \n\nAsal life mein, jab hum complex problems face karte hain, we need clear architecture. \n\n*Pro Tip:* Isko skip mat karna varna practically kuch apply nahi kar paega.`;
-    } else {
-      content = `**Core Overview:** Understanding the core fundamentals of *${promptInfo}*.\n\nIn industry applications, mastering this foundational architectural piece separates Junior developers from Senior engineers.\n\n*Pro Tip:* Ensure you fully grasp this before advancing.`;
-    }
-    return of(content).pipe(delay(1000));
+  fetchTopicNotes(topicId: string, roadmapTitle: string, topicTitle: string, language: 'English' | 'Hinglish'): Observable<string> {
+    return of(`**Real AI Notes for ${topicTitle} Coming Soon!**\n\nTransitioning to a dedicated Node.js backend for faster and more reliable content generation.`).pipe(
+      delay(1500)
+    );
   }
 
-  /**
-   * Marks a topic as read and persists to Firestore
-   */
   async updateTopicAsRead(roadmapId: string, topicId: string): Promise<void> {
     const roadmap = this.roadmapCache.get(roadmapId);
     if (!roadmap) return;
@@ -191,9 +166,6 @@ export class RoadmapService {
     await this.saveRoadmapToFirestore(roadmap);
   }
 
-  /**
-   * Submits quiz result and persists to Firestore
-   */
   async submitQuizResult(roadmapId: string, topicId: string, score: number): Promise<void> {
     const roadmap = this.roadmapCache.get(roadmapId);
     if (!roadmap) return;
@@ -220,9 +192,6 @@ export class RoadmapService {
     await this.saveRoadmapToFirestore(roadmap);
   }
 
-  /**
-   * Helper to persist roadmap state to Firestore
-   */
   private async saveRoadmapToFirestore(roadmap: CustomRoadmap): Promise<void> {
     const userId = this.authService.userId;
     if (!userId) return;
