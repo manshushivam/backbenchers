@@ -1,0 +1,43 @@
+<div class="page-container glass">
+  <div class="header-section text-center">
+    <h1 class="gradient-text">Top Backbenchers 🏆</h1>
+    <p class="text-secondary">Study hard, flex harder. Earn points and climb the ranks!</p>
+  </div>
+
+  <div class="leaderboard-card glass-card">
+    <div class="lb-header">
+      <div class="rank-col">Rank</div>
+      <div class="user-col">Backbencher</div>
+      <div class="stats-col">Stats</div>
+      <div class="points-col">Points</div>
+    </div>
+
+    @for (user of users; track user.rank) {
+      <div class="lb-row" [class.top-3]="user.rank <= 3">
+        <div class="rank-col">
+          <span class="rank-badge" [ngClass]="'rank-' + user.rank">{{ user.rank }}</span>
+        </div>
+        <div class="user-col">
+          <img [src]="user.avatarUrl" alt="Avatar" class="avatar">
+          <div class="user-info">
+            <span class="username">{{ user.name }}</span>
+            <div class="badges">
+              @for (badge of user.badges; track badge) {
+                <span class="badge-pill">{{ badge }}</span>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="stats-col">
+          <div class="streak" title="Study Streak">
+            {{ user.streak }} <span class="fire-icon">🔥</span>
+          </div>
+        </div>
+        <div class="points-col">
+          <span class="points">{{ user.points | number }}</span>
+          <span class="points-label">XP</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>

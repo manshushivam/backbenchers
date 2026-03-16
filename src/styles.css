@@ -1,0 +1,78 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  /* GenZ Color Palette - Dark Mode First, Neon Accents */
+  --bg-dark: #0f172a;
+  /* Slate 900 */
+  --bg-card: #1e293b;
+  /* Slate 800 */
+  --text-primary: #f8fafc;
+  /* Slate 50 */
+  --text-secondary: #cbd5e1;
+  /* Slate 300 */
+
+  --accent-primary: #8b5cf6;
+  /* Vibrant Purple */
+  --accent-secondary: #ec4899; /* Pink */
+  --accent-tertiary: #10b981; /* Emerald */
+  --bright-blue: #0ea5e9; /* Sky Blue */
+  --neon-yellow: #eab308; /* Yellow */
+  --hot-red: #ef4444;
+  --accent-gradient: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+
+  --font-family: 'Outfit', sans-serif;
+
+  --border-radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.light-theme {
+  --bg-dark: #f8fafc;
+  /* Slate 50 */
+  --bg-card: #ffffff;
+  /* White */
+  --text-primary: #0f172a;
+  /* Slate 900 */
+  --text-secondary: #ffffff;
+  /* Slate 600 */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gradient-text {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

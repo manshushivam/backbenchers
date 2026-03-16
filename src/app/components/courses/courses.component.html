@@ -1,0 +1,44 @@
+<div class="page-container glass">
+  <div class="header-section">
+    <h1 class="gradient-text">My Courses</h1>
+    <p class="text-secondary subtitle">Jump back into your personalized grind.</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state glass-card" *ngIf="myRoadmaps.length === 0">
+    <span class="material-symbols-outlined mega-icon">sentiment_dissatisfied</span>
+    <h2>Zero aura points detected.</h2>
+    <p class="text-secondary">You haven't started any personalized roadmaps yet. Let AI build something for you!</p>
+    <button class="primary-btn mt-4 explore-btn" routerLink="/explore">Go to Explore</button>
+  </div>
+
+  <!-- Active Courses Grid -->
+  <div class="course-grid" *ngIf="myRoadmaps.length > 0">
+    @for (roadmap of myRoadmaps; track roadmap.id) {
+      <div class="course-card glass-card" [routerLink]="['/roadmap', roadmap.id]">
+        <div class="card-header">
+          <div class="icon-wrapper">
+            <span class="material-symbols-outlined">psychology</span>
+          </div>
+          <span class="badge fire" *ngIf="roadmap.totalStreak > 0">🔥 {{ roadmap.totalStreak }} Streak</span>
+        </div>
+        
+        <h3>{{ roadmap.title }}</h3>
+        <p class="course-prompt">"{{ roadmap.topicPrompt }}"</p>
+        
+        <div class="stats-row">
+          <div class="stat">
+            <span class="material-symbols-outlined">menu_book</span>
+            <span>{{ roadmap.modules.length }} Modules</span>
+          </div>
+          <div class="stat">
+            <span class="material-symbols-outlined">workspace_premium</span>
+            <span>{{ roadmap.totalPoints }} Pts</span>
+          </div>
+        </div>
+        
+        <button class="primary-btn mt-4">Resume Grind</button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<header class="header glass">
+  <div class="logo-container" routerLink="/">
+    <span class="material-symbols-outlined logo-icon gradient-text">school</span>
+    <h2 class="logo-text gradient-text">Backbenchers</h2>
+  </div>
+
+  <nav class="nav-links">
+    <a routerLink="/courses" routerLinkActive="active" class="nav-item">
+      <span class="material-symbols-outlined">video_library</span>
+      Courses
+    </a>
+    <a routerLink="/explore" routerLinkActive="active" class="nav-item">
+      <span class="material-symbols-outlined">explore</span>
+      Explore
+    </a>
+    <a routerLink="/leaderboard" routerLinkActive="active" class="nav-item">
+      <span class="material-symbols-outlined">social_leaderboard</span>
+      Ranks
+    </a>
+  </nav>
+
+  <div class="auth-buttons">
+    <button class="icon-btn theme-toggle" (click)="toggleTheme()" aria-label="Toggle Theme">
+      <span class="material-symbols-outlined">{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</span>
+    </button>
+    <button class="btn-login text-btn">Login</button>
+    <button class="btn-signup primary-btn">Sign Up</button>
+  </div>
+</header>

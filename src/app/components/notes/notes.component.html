@@ -1,0 +1,106 @@
+<div class="page-container glass" *ngIf="roadmap">
+  <div class="top-nav">
+    <button class="icon-btn back-btn" routerLink="/explore">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <div class="language-toggle glass-card">
+      <span class="label">Language:</span>
+      <button class="toggle-btn" [class.active]="language === 'English'" (click)="toggleLanguage('English')">English</button>
+      <button class="toggle-btn" [class.active]="language === 'Hinglish'" (click)="toggleLanguage('Hinglish')">Hinglish</button>
+    </div>
+  </div>
+
+  <div class="roadmap-header" style="margin-bottom: 2rem; text-align: center;">
+    <h2 class="text-secondary" style="font-size: 1rem; text-transform: uppercase; letter-spacing: 2px;">Your Personalized Path</h2>
+    <h1 class="gradient-text" style="font-size: 2.5rem; margin: 0;">{{ roadmap.title }}</h1>
+  </div>
+
+  <div class="syllabus-layout">
+    <!-- Syllabus Sidebar -->
+    <aside class="sidebar glass-card">
+      <h2 class="sidebar-title">Track Progress</h2>
+      <div class="chapter-list">
+        @for (module of roadmap.modules; track module.id) {
+          <div class="chapter">
+            <h3 class="chapter-title">{{ module.title }}</h3>
+            <ul class="topic-list">
+              @for (topic of module.topics; track topic.id) {
+                <li class="topic-item" 
+                    [class.active]="topic === activeTopic"
+                    (click)="selectTopic(topic)">
+                  <span class="status-icon" [class.completed]="topic.isRead">
+                    <span class="material-symbols-outlined">{{ topic.isRead ? 'check_circle' : 'radio_button_unchecked' }}</span>
+                  </span>
+                  <span class="topic-name">{{ topic.title }}</span>
+                  <span class="quiz-badge" *ngIf="topic.fireLevel" title="{{ topic.fireLevel }}">{{ topic.fireLevel.split(' ')[2] }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content-area glass-card" *ngIf="activeTopic">
+      <div class="topic-header">
+        <h1 class="gradient-text">{{ activeTopic.title }}</h1>
+        <div class="badges">
+          <span class="badge" *ngIf="activeTopic.isRead">Read ✅</span>
+          <span class="badge fire" *ngIf="activeTopic.quizAttempted">{{ activeTopic.fireLevel }}</span>
+        </div>
+      </div>
+
+      <!-- AI Content Loading State -->
+      <div class="loading-state" *ngIf="isGeneratingAI">
+        <span class="material-symbols-outlined spin">auto_awesome</span>
+        <p>Generating personalized {{ language.toLowerCase() }} breakdown...</p>
+      </div>
+
+      <!-- AI Content -->
+      <div class="ai-content markdown-body" *ngIf="!isGeneratingAI && activeTopic.aiNotesContent">
+        <div [innerHTML]="parsedAiNotes"></div>
+        
+        <div class="action-buttons" style="flex-wrap: wrap; gap: 1rem;">
+          <button class="primary-btn" (click)="markCompleted()" [disabled]="activeTopic.isRead">
+            Mark as Read
+          </button>
+          
+          <div *ngIf="activeTopic.isRead && !activeTopic.quizAttempted" style="display: flex; gap: 0.5rem; align-items: center; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 1rem;">
+            <span class="text-secondary" style="font-size: 0.9rem;">Simulate Quiz:</span>
+            <button class="primary-btn outline" (click)="simulateQuizCompletion(5)">Score 5/5</button>
+            <button class="primary-btn outline" (click)="simulateQuizCompletion(3)">Score 3/5</button>
+            <button class="primary-btn outline" (click)="simulateQuizCompletion(1)">Score 1/5</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inline Ask Doubt -->
+      <div class="doubt-section" *ngIf="!isGeneratingAI">
+        <h3><span class="material-symbols-outlined">psychology</span> Ask Backbencher AI</h3>
+        <p class="text-secondary subtitle">Didn't understand a concept? Ask away in your own words.</p>
+        
+        <form class="doubt-form" (ngSubmit)="askDoubt($event)">
+          <textarea 
+            [(ngModel)]="doubtQuery" 
+            name="doubtQuery" 
+            placeholder="Type your doubt here... (e.g., 'Bro, what exactly is a router?')"
+            rows="3"
+            class="glass-input">
+          </textarea>
+          <button type="submit" class="primary-btn" [disabled]="!doubtQuery.trim()">Ask</button>
+        </form>
+
+        <div class="doubt-response glass-card" *ngIf="doubtResponse">
+          <p>{{ doubtResponse }}</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="page-container glass" *ngIf="!roadmap">
+  <h1 class="text-tertiary">Access Denied!</h1>
+  <p class="text-secondary">This personalized roadmap doesn't exist.</p>
+  <button class="primary-btn mt-4" routerLink="/explore">Make a new Roadmap</button>
+</div>

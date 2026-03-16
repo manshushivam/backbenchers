@@ -1,0 +1,38 @@
+<!-- Floating Action Button -->
+<button class="fab" *ngIf="!isOpen" (click)="toggleChat()">
+  <span class="material-symbols-outlined">smart_toy</span>
+</button>
+
+<!-- Chat Window -->
+<div class="chat-window glass" *ngIf="isOpen">
+  <div class="chat-header">
+    <div class="ai-info">
+      <span class="material-symbols-outlined">smart_toy</span>
+      <h3>Backbencher AI</h3>
+    </div>
+    <button class="close-btn" (click)="toggleChat()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  <div class="chat-body" #chatBody>
+    @for (msg of messages; track msg) {
+      <div class="message" [ngClass]="{'msg-ai': msg.sender === 'ai', 'msg-user': msg.sender === 'user'}">
+        {{ msg.text }}
+      </div>
+    }
+  </div>
+
+  <div class="chat-footer">
+    <div class="suggestions">
+      <button class="suggestion-pill" (click)="askQuestion('Paging')">Explain Paging bro</button>
+      <button class="suggestion-pill" (click)="askQuestion('Deadlock')">What is Deadlock?</button>
+    </div>
+    <div class="input-area">
+      <input type="text" placeholder="Type your doubt..." #chatInput (keyup.enter)="askQuestion(chatInput.value); chatInput.value = ''">
+      <button class="send-btn" (click)="askQuestion(chatInput.value); chatInput.value = ''">
+        <span class="material-symbols-outlined">send</span>
+      </button>
+    </div>
+  </div>
+</div>

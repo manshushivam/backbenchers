@@ -1,0 +1,43 @@
+<div class="page-container glass">
+  <div class="hero-section" *ngIf="!isGenerating">
+    <h1 class="gradient-text">What do you want to learn today?</h1>
+    <p class="text-secondary subtitle">Skip the 100-hour generic courses. Tell Backbencher AI what you want to learn, and we will build a personalized Zero-to-Hero syllabus just for you.</p>
+
+    <form class="search-form" (ngSubmit)="generateRoadmap()">
+      <div class="input-wrapper glass-card">
+        <span class="material-symbols-outlined search-icon">psychology</span>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          name="searchQuery" 
+          placeholder="e.g. Computer Networking, React Basics, or System Design..." 
+          class="prompt-input"
+          autocomplete="off"
+        >
+        <button type="submit" class="primary-btn generate-btn" [disabled]="!searchQuery.trim()">
+          Build My Roadmap
+        </button>
+      </div>
+    </form>
+
+    <div class="trending-tags">
+      <span class="tag" (click)="searchQuery = 'Advanced Data Structures'">🔥 Advanced Data Structures</span>
+      <span class="tag" (click)="searchQuery = 'Machine Learning'">🤖 Machine Learning</span>
+      <span class="tag" (click)="searchQuery = 'Node.js Backend'">💻 Node.js Backend</span>
+    </div>
+  </div>
+
+  <div class="generating-state" *ngIf="isGenerating">
+    <div class="spinner-container">
+      <span class="material-symbols-outlined mega-spin">autorenew</span>
+    </div>
+    <h2 class="gradient-text">Generating your personalized Syllabus...</h2>
+    <p class="text-secondary">Analyzing skill paths for "{{ searchQuery }}"...</p>
+    
+    <div class="progress-steps text-secondary">
+      <p>✅ Identifying core concepts...</p>
+      <p>✅ Structuring modules...</p>
+      <p class="blinking">⏳ Wiring up the Gamification Streaks...</p>
+    </div>
+  </div>
+</div>
