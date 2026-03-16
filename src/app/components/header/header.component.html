@@ -23,7 +23,24 @@
     <button class="icon-btn theme-toggle" (click)="toggleTheme()" aria-label="Toggle Theme">
       <span class="material-symbols-outlined">{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</span>
     </button>
-    <button class="btn-login text-btn">Login</button>
-    <button class="btn-signup primary-btn">Sign Up</button>
+
+    <!-- Logged Out State -->
+    <ng-container *ngIf="!authService.isLoggedIn && !authService.isLoading">
+      <button class="btn-signup primary-btn" (click)="login()">
+        <span class="material-symbols-outlined" style="font-size: 1.1rem; vertical-align: middle;">login</span>
+        Sign in with Google
+      </button>
+    </ng-container>
+
+    <!-- Logged In State -->
+    <ng-container *ngIf="authService.isLoggedIn">
+      <div class="user-profile">
+        <img *ngIf="authService.userPhotoURL" [src]="authService.userPhotoURL" class="user-avatar" alt="Avatar" referrerpolicy="no-referrer">
+        <span class="user-name">{{ authService.userDisplayName }}</span>
+        <button class="icon-btn" (click)="logout()" title="Sign Out">
+          <span class="material-symbols-outlined">logout</span>
+        </button>
+      </div>
+    </ng-container>
   </div>
 </header>

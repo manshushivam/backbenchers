@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { RoadmapService, CustomRoadmap } from '../../services/roadmap.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-courses',
@@ -11,10 +12,17 @@ import { RoadmapService, CustomRoadmap } from '../../services/roadmap.service';
 })
 export class CoursesComponent implements OnInit {
   myRoadmaps: CustomRoadmap[] = [];
+  isLoading: boolean = true;
 
-  constructor(private roadmapService: RoadmapService) {}
+  constructor(
+    private roadmapService: RoadmapService,
+    public authService: AuthService
+  ) {}
 
-  ngOnInit() {
-    this.myRoadmaps = this.roadmapService.getAllRoadmaps();
+  async ngOnInit() {
+    if (this.authService.isLoggedIn) {
+      this.myRoadmaps = await this.roadmapService.getAllRoadmaps();
+    }
+    this.isLoading = false;
   }
 }

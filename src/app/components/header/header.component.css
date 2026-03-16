@@ -115,13 +115,41 @@
   box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
 }
 
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.4rem 0.6rem 0.4rem 0.4rem;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-secondary);
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0.8rem 1rem;
   }
   
   .nav-links {
-    display: none; /* Hide standard nav, rely on home/bottom nav */
+    display: none;
   }
   
   .logo-text {
@@ -139,5 +167,9 @@
   .btn-login, .btn-signup {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
+  }
+
+  .user-name {
+    display: none;
   }
 }

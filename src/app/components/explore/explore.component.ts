@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RoadmapService } from '../../services/roadmap.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-explore',
@@ -16,19 +17,23 @@ export class ExploreComponent {
 
   constructor(
     private roadmapService: RoadmapService,
-    private router: Router
+    private router: Router,
+    public authService: AuthService
   ) {}
 
   generateRoadmap() {
     if (!this.searchQuery.trim() || this.isGenerating) return;
 
+    if (!this.authService.isLoggedIn) {
+      this.authService.signInWithGoogle();
+      return;
+    }
+
     this.isGenerating = true;
 
-    // Simulate backend LLM generation
     this.roadmapService.generateRoadmap(this.searchQuery).subscribe({
       next: (roadmap) => {
         this.isGenerating = false;
-        // Redirect to the new personalized tracking view
         this.router.navigate(['/roadmap', roadmap.id]);
       },
       error: () => {
@@ -38,3 +43,4 @@ export class ExploreComponent {
     });
   }
 }
+

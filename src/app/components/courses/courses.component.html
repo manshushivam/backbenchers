@@ -4,12 +4,25 @@
     <p class="text-secondary subtitle">Jump back into your personalized grind.</p>
   </div>
 
-  <!-- Empty State -->
-  <div class="empty-state glass-card" *ngIf="myRoadmaps.length === 0">
+  <!-- Not Logged In -->
+  <div class="empty-state glass-card" *ngIf="!authService.isLoggedIn && !isLoading">
+    <span class="material-symbols-outlined mega-icon">lock</span>
+    <h2>Login to unlock your courses</h2>
+    <p class="text-secondary">Sign in with Google to create and track your personalized roadmaps.</p>
+  </div>
+
+  <!-- Empty State (logged in, no courses) -->
+  <div class="empty-state glass-card" *ngIf="authService.isLoggedIn && myRoadmaps.length === 0 && !isLoading">
     <span class="material-symbols-outlined mega-icon">sentiment_dissatisfied</span>
     <h2>Zero aura points detected.</h2>
     <p class="text-secondary">You haven't started any personalized roadmaps yet. Let AI build something for you!</p>
     <button class="primary-btn mt-4 explore-btn" routerLink="/explore">Go to Explore</button>
+  </div>
+
+  <!-- Loading -->
+  <div class="empty-state glass-card" *ngIf="isLoading">
+    <span class="material-symbols-outlined mega-icon spin">sync</span>
+    <h2>Loading your courses...</h2>
   </div>
 
   <!-- Active Courses Grid -->

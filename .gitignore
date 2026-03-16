@@ -40,3 +40,11 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Firebase
+.firebase/
+firebase-debug.log
+
+# Environment secrets (API keys)
+/src/environments/environment.ts
+/src/environments/environment.prod.ts

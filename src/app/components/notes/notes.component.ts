@@ -32,9 +32,9 @@ export class NotesComponent implements OnInit {
     private roadmapService: RoadmapService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.roadmapId = this.route.snapshot.paramMap.get('roadmapId') || '';
-    const loadedRoadmap = this.roadmapService.getRoadmap(this.roadmapId);
+    const loadedRoadmap = await this.roadmapService.getRoadmap(this.roadmapId);
     
     if (loadedRoadmap) {
       this.roadmap = loadedRoadmap;
@@ -75,19 +75,18 @@ export class NotesComponent implements OnInit {
       });
   }
 
-  markCompleted() {
+  async markCompleted() {
     if (this.activeTopic && this.roadmap) {
-      this.roadmapService.updateTopicAsRead(this.roadmap.id, this.activeTopic.id);
+      await this.roadmapService.updateTopicAsRead(this.roadmap.id, this.activeTopic.id);
       
-      // Time spent mock
       this.activeTopic.timeSpentSeconds = 650; 
       alert("Bro, concept clear hai ya bas swipe kar rahe ho? 🤨 Take the 5-question challenge to unlock your streak!");
     }
   }
 
-  simulateQuizCompletion(score: number) {
+  async simulateQuizCompletion(score: number) {
     if (this.activeTopic && this.roadmap && !this.activeTopic.quizAttempted) {
-      this.roadmapService.submitQuizResult(this.roadmap.id, this.activeTopic.id, score);
+      await this.roadmapService.submitQuizResult(this.roadmap.id, this.activeTopic.id, score);
       
       let message = "";
       if (score === 5) message = "Super Fire! 🔥 +2 Streak added.";

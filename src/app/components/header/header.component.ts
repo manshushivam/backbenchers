@@ -1,6 +1,7 @@
 import { Component, Inject, Renderer2, OnInit, ElementRef } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { DOCUMENT, CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     @Inject(DOCUMENT) private document: Document, 
     private renderer: Renderer2,
-    private eRef: ElementRef
+    private eRef: ElementRef,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {}
@@ -26,5 +28,13 @@ export class HeaderComponent implements OnInit {
     } else {
       this.renderer.addClass(this.document.body, 'light-theme');
     }
+  }
+
+  login() {
+    this.authService.signInWithGoogle();
+  }
+
+  logout() {
+    this.authService.signOutUser();
   }
 }
